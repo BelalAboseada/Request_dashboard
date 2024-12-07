@@ -1,0 +1,23 @@
+.search::placeholder {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+}
+.search {
+  padding: 5px 50px 5px 30px;
+  &:focus {
+    outline: none;
+    border: 1px solid var(--gray);
+    transition: 0.3s;
+  }
+}
+
+// .Header {
+//   width: calc(100% - 288px);
+//   right: 0 !important;
+// }
+// .Header:dir(rtl) {
+//   right: auto !important;
+//   left: 0 !important;
+// }
