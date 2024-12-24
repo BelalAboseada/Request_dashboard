@@ -45,7 +45,7 @@ const Sidebar = () => {
     {
       title: t("analysis"),
       icon: <IoAnalyticsOutline className="sidebar_icon" />,
-      path: "/wwj",
+      path: "/Analysis",
     },
     {
       title: t("account"),

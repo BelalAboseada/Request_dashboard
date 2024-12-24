@@ -59,7 +59,7 @@ const UserDetails = () => {
     <div className="UserDetails p-4">
       <div className="userDetails bg-white  rounded-2xl shadow-md p-2">
         <div className="flex items-center justify-between p-2 border-b border-solid border-gray-100">
-          <div className="relative after:content-[''] after:absolute after:bg-purple after:rounded-t-md  after:h-2 after:w-full after:left-0 after:-bottom-2">
+          <div className="relative after:content-[''] after:absolute after:bg-purple after:rounded-t-md  after:h-1 after:w-full after:left-0 after:-bottom-2">
             <span className="text-purple font-medium  text-lg">
               {t("userDetails")}
             </span>

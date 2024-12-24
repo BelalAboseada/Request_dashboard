@@ -408,7 +408,18 @@
   "Registration Date": "تاريخ التسجيل",
   "Op. NO.": "رقم العملية",
   "StopTheUser": "إيقاف المستخدم",
-  "userDetails" : "تفاصيل المستخدم",
-  "ActiveProjects" : "المشاريع النشطة",
-  "ProjectsPerformance" : "أداء المشاريع" 
+  "userDetails": "تفاصيل المستخدم",
+  "ActiveProjects": "المشاريع النشطة",
+  "ProjectsPerformance": "أداء المشاريع",
+  "ProjectData": "معلومات المشروع",
+  "Number Of Tasks": "عدد المهام",
+  "Report Center": "مركز التقارير",
+  "Audience Map Location": "موقع خريطة الجمهور",
+  "Weekly Order Rate": "معدل الطلبات الأسبوعي",
+  "User Ratios": "نسب المستخدمين",
+  "Weekly Activity": "النشاط الأسبوعي",
+  "Monthly Revenue": "الإيرادات الشهرية",
+  "Revenue": "الإيرادات",
+  "Orders": "الطلبات",
+  "Activities": "الأنشطة"
 }

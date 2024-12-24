@@ -1,14 +1,21 @@
 import { t } from "i18next";
 import Chart from "react-apexcharts";
-const PackageChart = () => {
+const WeeklyOrderRateChart = () => {
   const options = {
     chart: {
       type: "line",
+      dropShadow: {
+        enabled: true,
+        color: "#ccabd8",
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.5,
+      },
       toolbar: {
         show: false,
       },
     },
-    colors: ["#0095FF", "#8744A4", "#FFB926"],
     stroke: {
       width: 4,
       curve: "smooth",
@@ -18,20 +25,7 @@ const PackageChart = () => {
       borderColor: "#e0e0e0",
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       axisBorder: {
         show: false,
       },
@@ -50,9 +44,9 @@ const PackageChart = () => {
     markers: {
       size: 0,
       colors: ["#fff"],
-      strokeColors: ["#0095FF", "#8744A4", "#FFB926"],
       strokeWidth: 12,
     },
+    colors: ["#ccabd8"],
     tooltip: {
       y: {
         formatter: (value) => `${value}`,
@@ -64,25 +58,17 @@ const PackageChart = () => {
     },
   };
 
-   const series = [
-     {
-       name: "Request",
-       data: [100, 120, 150, 180, 200, 250, 300, 280, 260, 240, 220, 200],
-     },
-     {
-       name: "Request plus",
-       data: [200, 180, 160, 140, 180, 220, 250, 270, 260, 240, 230, 210],
-     },
-     {
-       name: "Request full plus",
-       data: [150, 170, 190, 200, 210, 230, 240, 260, 270, 260, 240, 220],
-     },
-   ];
+ const series = [
+   {
+     name: t("Orders"), // Series name
+     data: [300, 50, 30, 160, 40, 70, 100], // Data points
+   },
+ ];
 
   return (
-    <div className="col-span-3 card p-4 bg-white rounded-xl shadow-md">
+    <div className="card p-4 bg-white rounded-xl shadow-md">
       <h3 className="text-lg font-bold mb-2" style={{ color: "#05004E" }}>
-        {t("Packages")}
+        {t("Weekly Order Rate")}
       </h3>
       <Chart
         options={options}
@@ -94,4 +80,4 @@ const PackageChart = () => {
   );
 };
 
-export default PackageChart;
+export default WeeklyOrderRateChart;

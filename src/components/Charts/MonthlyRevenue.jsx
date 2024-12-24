@@ -1,14 +1,27 @@
 import { t } from "i18next";
 import Chart from "react-apexcharts";
-const PackageChart = () => {
+
+const MonthlyRevenue = () => {
   const options = {
     chart: {
       type: "line",
       toolbar: {
         show: false,
       },
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 1000,
+        animateGradually: {
+          enabled: true,
+          delay: 150,
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 350,
+        },
+      },
     },
-    colors: ["#0095FF", "#8744A4", "#FFB926"],
     stroke: {
       width: 4,
       curve: "smooth",
@@ -41,57 +54,61 @@ const PackageChart = () => {
     },
     yaxis: {
       min: 0,
-      max: 400,
+    //   max: 7000, 
       tickAmount: 4,
       labels: {
-        formatter: (value) => `${value}`,
+        formatter: (value) => `$${value}`, 
       },
     },
     markers: {
-      size: 0,
-      colors: ["#fff"],
-      strokeColors: ["#0095FF", "#8744A4", "#FFB926"],
-      strokeWidth: 12,
+      size: 2,
+      strokeWidth: 2,
     },
+    colors: ["#ccabd8"],
     tooltip: {
       y: {
-        formatter: (value) => `${value}`,
+        formatter: (value) => `$${value}`,
       },
     },
     legend: {
       position: "bottom",
       horizontalAlign: "center",
     },
+    responsive: [
+      {
+        breakpoint: 600,
+        options: {
+          chart: {
+            height: 200,
+          },
+        },
+      },
+    ],
   };
 
-   const series = [
-     {
-       name: "Request",
-       data: [100, 120, 150, 180, 200, 250, 300, 280, 260, 240, 220, 200],
-     },
-     {
-       name: "Request plus",
-       data: [200, 180, 160, 140, 180, 220, 250, 270, 260, 240, 230, 210],
-     },
-     {
-       name: "Request full plus",
-       data: [150, 170, 190, 200, 210, 230, 240, 260, 270, 260, 240, 220],
-     },
-   ];
+  const revenueChartSeries = [
+    {
+      name: "Revenue",
+      data: [
+        1000, 2000, 1500, 3000, 2500, 4000, 5000, 2500, 3500, 4000, 4200, 6600,
+      ],
+    },
+  ];
 
   return (
-    <div className="col-span-3 card p-4 bg-white rounded-xl shadow-md">
+    <div className="card p-4 bg-white rounded-xl shadow-md">
       <h3 className="text-lg font-bold mb-2" style={{ color: "#05004E" }}>
-        {t("Packages")}
+        {t("Monthly Revenue")}
       </h3>
+      <hr />
       <Chart
         options={options}
-        series={series}
+        series={revenueChartSeries}
         type={options.chart.type}
-        height={250}
+        height={300}
       />
     </div>
   );
 };
 
-export default PackageChart;
+export default MonthlyRevenue;
