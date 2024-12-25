@@ -421,5 +421,18 @@
   "Monthly Revenue": "الإيرادات الشهرية",
   "Revenue": "الإيرادات",
   "Orders": "الطلبات",
-  "Activities": "الأنشطة"
+  "Activities": "الأنشطة",
+  "Total visitors": "إجمالي الزوار",
+  "New visitors": "الزوار الجدد",
+  "Returning visitors": "الزوار العائدون",
+  "Bounce Rate": "معدل الارتداد",
+  "Duration Of Visit:": "مدة الزيارة:",
+  "The average time visitors spend on the site.": "متوسط الوقت الذي يقضيه الزوار على الموقع.",
+  "Visits": "الزيارات",
+  "Most Visited Gender": "الجنس الأكثر زيارة",
+  "Top 10 Countries": "أفضل 10 دول",
+  "the age": "الفئة العمرية",
+  "Traffic sources": "مصادر الحركة",
+  "Top 10 keywords": "أفضل 10 كلمات مفتاحية",
+  "Work rank" : "رتبة العمل"
 }

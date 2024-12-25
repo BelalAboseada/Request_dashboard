@@ -7,8 +7,23 @@ import { IoIosArrowForward } from "react-icons/io";
 import WeeklyActivity from "../../components/Charts/WeeklyActivity";
 import MonthlyRevenue from "../../components/Charts/MonthlyRevenue";
 import { t } from "i18next";
+import ProgressList from "../../components/ProgressList/ProgressList";
 
 const Analysis = () => {
+const Countries = [
+  { name: "Saudi Arabia" },
+  { name: "Egypt" },
+  { name: "Jordan" },
+  { name: "Yemen" },
+  { name: "Turkey" },
+];
+  const models = [
+    { name: "Architectural", color: "amber", value: 30 },
+    { name: "electrical", color: "cyan", value: 70 },
+    { name: "restoration", color: "orange", value: 50 },
+    { name: "civilian", color: "", value: 30 },
+    { name: "Safety and security", color: "lime", value: 60 },
+  ];
   return (
     <div className="Analysis  p-2 lg:-p-4">
       <div className="grid grid-cols-6 gap-2">
@@ -25,29 +40,12 @@ const Analysis = () => {
         <hr />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div className="col-span-2">
-            <ul className="">
-              {["Saudi Arabia", "Egypt", "Jordan", "Yemen", "Turkey"].map(
-                (location, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center py-2"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <span>{location}</span>
-                      <Progress
-                        value={50}
-                        //   style={{ color: "" }}
-                        //   className="!bg-yellow"
-                        color="amber"
-                      />
-                    </div>
-                    <span>
-                      {Math.floor(Math.random() * 1000)} {t("users")}
-                    </span>
-                  </li>
-                )
-              )}
-            </ul>
+            <ProgressList
+              items={Countries}
+              valueFormatter={(item) =>
+                `${Math.floor(Math.random() * 1000)} ${t("users")}`
+              }
+            />
           </div>
           <div className="col-span-2">
             <img src={World} alt="World" />
@@ -77,30 +75,7 @@ const Analysis = () => {
         <span className="text-gray  text-xs">{t("Report Center")}</span>
         <hr />
 
-        <ul className="">
-          {[
-            { name: "Architectural", color: "amber", value: 30 },
-            { name: "electrical", color: "cyan", value: 70 },
-            { name: "restoration", color: "orange", value: 50 },
-            { name: "civilian", color: "", value: 30 },
-            { name: "Safety and security", color: "lime", value: 60 },
-          ].map((location, index) => (
-            <li key={index} className="flex justify-between items-center py-2">
-              <div className="flex flex-col gap-2">
-                <span>{location.name}</span>
-                <Progress
-                  value={location.value}
-                  //   style={{ color: "" }}
-                  //   className="!bg-yellow"
-                  color={location.color}
-                />
-              </div>
-              <span>
-                {Math.floor(Math.random() * 1000)} {t("users")}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <ProgressList items={models}  />
 
         <hr />
         <div className="flex items-center justify-end m-1 p-1">

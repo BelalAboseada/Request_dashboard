@@ -1,8 +1,10 @@
+import Account from "../pages/Account/Account";
 import Analysis from "../pages/analysis/Analysis";
 import Login from "../pages/auth/Login/Login";
 import Home from "../pages/Home/Home";
 import ProjectDetails from "../pages/Projects/projectDetails";
 import Projects from "../pages/Projects/Projects";
+import Support from "../pages/Support/Support";
 import Tasks from "../pages/Tasks/Tasks";
 import UserDetails from "../pages/Users/UserDetails";
 import Users from "../pages/Users/Users";
@@ -23,4 +25,6 @@ export const protectedRoutes = [
   { path: "/AllTasks", component: <Tasks /> },
   { path: "/Analysis", component: <Analysis /> },
   { path: "/Visitors", component: <Visitors /> },
+  { path: "/Account", component: <Account /> },
+  { path: "/Support", component: <Support /> },
 ];

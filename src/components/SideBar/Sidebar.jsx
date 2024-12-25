@@ -50,12 +50,12 @@ const Sidebar = () => {
     {
       title: t("account"),
       icon: <FaUser className="sidebar_icon" />,
-      path: "/wwy",
+      path: "/Account",
     },
     {
       title: t("support"),
       icon: <BiSupport className="sidebar_icon" />,
-      path: "/ggg",
+      path: "/Support",
     },
     {
       title: t("Team"),

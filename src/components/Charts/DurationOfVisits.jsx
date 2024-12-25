@@ -90,7 +90,7 @@ const DurationOfVisits = () => {
         {t("Duration Of Visit:")}
       </h3>
       <span className="text-gray text-sm font-medium">
-        The average time visitors spend on the site.
+        {t("The average time visitors spend on the site.")}
       </span>
       <hr />
       <Chart

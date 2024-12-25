@@ -50,13 +50,13 @@ const MostVisitedGender = () => {
   return (
     <div className="col-span-3 card p-4 bg-white rounded-xl shadow-md">
       <h3 className="text-lg font-bold mb-2" style={{ color: "#05004E" }}>
-        {t("User Ratios")}
+        {t("Most Visited Gender")}
       </h3>
       <Chart
         options={options}
         series={series}
         type={options.chart.type}
-        height={265}
+        height={280}
       />
     </div>
   );
