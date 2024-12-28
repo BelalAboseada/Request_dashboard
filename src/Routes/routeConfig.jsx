@@ -5,6 +5,8 @@ import Home from "../pages/Home/Home";
 import ProjectDetails from "../pages/Projects/projectDetails";
 import Projects from "../pages/Projects/Projects";
 import Support from "../pages/Support/Support";
+import TicketDetails from "../pages/Support/TicketDetails";
+import TotalTickets from "../pages/Support/TotalTickets";
 import Tasks from "../pages/Tasks/Tasks";
 import UserDetails from "../pages/Users/UserDetails";
 import Users from "../pages/Users/Users";
@@ -27,4 +29,6 @@ export const protectedRoutes = [
   { path: "/Visitors", component: <Visitors /> },
   { path: "/Account", component: <Account /> },
   { path: "/Support", component: <Support /> },
+  { path: "/TotalTickets", component: <TotalTickets /> },
+  { path: "/TicketDetails/:id", component: <TicketDetails /> },
 ];

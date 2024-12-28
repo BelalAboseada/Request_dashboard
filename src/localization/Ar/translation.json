@@ -393,6 +393,7 @@
   "totalProjects": "إجمالي المشاريع",
   "NewCustomers": "عملاء جدد",
   "totalTickets": "إجمالي التذاكر",
+  "Ticket": "تذكره",
   "NewUsers": "مستخدمون جدد",
   "LastWeek": "الأسبوع الماضي",
   "Most Used Models": "النماذج الأكثر استخدامًا",
@@ -434,5 +435,19 @@
   "the age": "الفئة العمرية",
   "Traffic sources": "مصادر الحركة",
   "Top 10 keywords": "أفضل 10 كلمات مفتاحية",
-  "Work rank" : "رتبة العمل"
+  "Work rank": "رتبة العمل",
+  "View All": "عرض الكل",
+  "Total Tickets": "إجمالي التذاكر",
+  "Ticket List": "قائمة التذاكر",
+  "Total Assignees": "إجمالي المكلفين",
+  "Assignee List": "قائمة المكلفين",
+  "Assignee": "المكلف",
+  "Filter": "التصفية",
+  "Submitted": "مقدم",
+  "Ticket ID": "معرف التذكرة",
+  "load more": "تحميل المزيد",
+  "Choose an assignee and set status to “In Progress” to add response.": "اختر المسؤول وقم بتعيين الحالة إلى \"قيد التنفيذ\" لإضافة رد.",
+  "This ticket has been solved.": "تم حل هذه التذكرة.",
+  "This ticket is deferred.": "تم تأجيل هذه التذكرة.",
+  "Add Response": "إضافة رد"
 }
