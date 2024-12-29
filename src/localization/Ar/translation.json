@@ -91,7 +91,6 @@
   "Waiting": "في الانتظار",
   "Ended": "مكتمل",
   "TName": "اسم العلامة",
-
   "createTag": "إنشاء علامة",
   "AddLogo": "إضافة شعار",
   "Logo": "شعار",
@@ -270,7 +269,7 @@
   "Create": "إنشاء",
   "Delete": "حذف",
   "Access": "الوصول",
-  "Add new access": "+إضافة وصول جديد",
+  "+Add new access": "+إضافة وصول جديد",
   "Delegated access": "وصول مفوض",
   "Total Team Members": "إجمالي أعضاء الفريق",
   "You gave access to the following members": "لقد منحت حق الوصول للأعضاء التاليين",
@@ -449,5 +448,8 @@
   "Choose an assignee and set status to “In Progress” to add response.": "اختر المسؤول وقم بتعيين الحالة إلى \"قيد التنفيذ\" لإضافة رد.",
   "This ticket has been solved.": "تم حل هذه التذكرة.",
   "This ticket is deferred.": "تم تأجيل هذه التذكرة.",
-  "Add Response": "إضافة رد"
+  "Add Response": "إضافة رد",
+  "Balance": "الرصيد",
+  "Package shipping movement": "حركة شحن الطرود",
+  "VALID THRU": "صالح حتى"
 }

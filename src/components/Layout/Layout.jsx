@@ -5,8 +5,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import useAuthRedirect from "../../hooks/useAuthRedirect";
 import AppRoutes from "../../Routes/AppRoutes";
-import Sidebar from "../SideBar/Sidebar";
 import Header from "../Header/Header";
+import Sidebar from "../SideBar/Sidebar";
 
 const Layout = () => {
   // const location = useLocation();
@@ -20,11 +20,8 @@ const Layout = () => {
     draggable: true,
     progress: undefined,
   };
-  const noSidebarRoutes = ["/LogIn"];
+  const noSidebarRoutes = ["/LogIn", "*", "/404"];
 
-  //  const isLandingPage =
-  //  location.pathname === "/landing" ||
-  //  location.pathname.startsWith("/landing/");
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
 
   return (

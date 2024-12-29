@@ -9,6 +9,8 @@ import PackageChart from "../../components/Charts/PackageChart";
 import { t } from "i18next";
 
 const Home = () => {
+
+  
   return (
     <div className="Home p-4">
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">

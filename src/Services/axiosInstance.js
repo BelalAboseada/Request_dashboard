@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const ApiUrl = "https://api.request-sa.com/api/v1/";
+const ApiUrl = import.meta.env.VITE_API_URL;
+
 const axiosInstance = axios.create({
   baseURL: ApiUrl,
   timeout: 10000,

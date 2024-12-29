@@ -130,13 +130,13 @@ const Header = () => {
               ))} */}
               </div>
             </div>
-            <div className="user">
+            <Link to={"/Account"} className="user">
               <img
                 src={avatar}
                 alt="logo"
                 className="w-[48px] h-[48 px] rounded-full border-2 border-gray-light"
               />
-            </div>
+            </Link>
           </div>
           {/* )}  */}
           <div className="footer"></div>

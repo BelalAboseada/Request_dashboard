@@ -92,11 +92,11 @@ const TicketDetails = () => {
           }}
         >
           <span className="text-gray-dark text-base font-bold flex  items-center gap-2">
-            <BiSupport className="text-green w-6 h-6" />{" "}
+            <BiSupport className="text-green w-6 h-6" />
             <span> Deanna Jones</span>
           </span>
           <span className="text-base font-medium">
-            Have you tried turning your phone off and on again?{" "}
+            Have you tried turning your phone off and on again?
           </span>
           <img
             src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="

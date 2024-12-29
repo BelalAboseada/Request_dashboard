@@ -60,12 +60,12 @@ const Sidebar = () => {
     {
       title: t("Team"),
       icon: <RiTeamFill className="sidebar_icon" />,
-      path: "/gg",
+      path: "/Team",
     },
     {
       title: t("settings"),
       icon: <GiSettingsKnobs className="sidebar_icon" />,
-      path: "/wws",
+      path: "/Setting",
     },
   ];
 
