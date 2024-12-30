@@ -15,7 +15,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Check if error.response exists, otherwise return a default error message
     if (error.response) {
-      return Promise.reject(error.response.data); 
+      return Promise.reject(error.response.data);
     } else if (error.request) {
       // Request was made, but no response was received
       return Promise.reject({
@@ -31,6 +31,3 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-
-
-

@@ -16,9 +16,13 @@ import Users from "../pages/Users/Users";
 import Visitors from "../pages/Visitors/Visitors";
 import Page404 from "../pages/404Page/page404";
 
-// Define public routes
 export const publicRoutes = [
   { path: "/LogIn", component: <Login /> },
+  {
+    path: "*",
+    component: <Navigate to="/404" replace />,
+  },
+  { path: "/404", component: <Page404 /> },
 ];
 
 // Define protected routes
@@ -37,9 +41,4 @@ export const protectedRoutes = [
   { path: "/TicketDetails/:id", component: <TicketDetails /> },
   { path: "/Team", component: <Team /> },
   { path: "/Setting", component: <Setting /> },
-  {
-    path: "*",
-    component: <Navigate to="/404" replace />,
-  },
-  { path: "/404", component: <Page404 /> },
 ];

@@ -333,7 +333,9 @@
     "TagsCreatedSuccess": "tags created Successfully",
     "you have been added to {{projectName}} successfully": "you have been added to {{projectName}} successfully",
     "You have canceled the invitation to {{projectName}} successfully": "You have canceled the invitation to {{projectName}} successfully",
-    "inviteSuccess": "Invite Sent Successfully"
+    "inviteSuccess": "Invite Sent Successfully",
+    "loggedInSuccess": "Logged In Successfully",
+    "unauthorized": "You are not authorized to access this admin panel"
   },
   "You have been invited to": "You have been invited to",
   "as a": "as a",

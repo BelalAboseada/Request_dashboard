@@ -1,4 +1,5 @@
 import { t } from "i18next";
+import { useEffect, useState } from "react";
 import {
   MdEngineering,
   MdOutlineKeyboardDoubleArrowRight,
@@ -6,7 +7,28 @@ import {
 } from "react-icons/md";
 import { TfiFilter } from "react-icons/tfi";
 import { Link } from "react-router-dom";
+import { getAllUsers } from "../../Services/api";
+import ProfileAvatar from "../../components/profilePic/profilePic";
+import Loader from "../../components/Loader/Loader";
+import Skeleton from "react-loading-skeleton";
 const Users = () => {
+  const [Users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await getAllUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="Users p-3">
       <div className="admins grid grid-cols-1 lg:grid-cols-3 gap-3 my-3">
@@ -27,12 +49,12 @@ const Users = () => {
                 {t("consultant")}
               </h4>
               <span className="  font-semibold text-xl flex justify-end">
-                30K
+                {Users?.countConsultant}
               </span>
             </div>
           </div>
         </div>
-        <div className="consultant">
+        <div className="contractor">
           <div className=" bg-white  w-full flex items-center  gap-2 p-3 rounded-3xl">
             <div
               className="icon p-2 w-14 h-12 rounded-full flex justify-center items-center "
@@ -49,12 +71,12 @@ const Users = () => {
                 {t("contractor")}
               </h4>
               <span className="  font-semibold text-xl flex justify-end">
-                34k
+                {Users?.countContractors}
               </span>
             </div>
           </div>
         </div>
-        <div className="contractor">
+        <div className="owner">
           <div className=" bg-white  w-full flex items-center  gap-2 p-3 rounded-3xl">
             <div
               className="icon p-2 w-14 h-12 rounded-full flex justify-center items-center "
@@ -71,7 +93,7 @@ const Users = () => {
                 {t("owner")}
               </h4>
               <span className="  font-semibold text-xl flex justify-end">
-                34k
+                {Users?.countOwners}
               </span>
             </div>
           </div>
@@ -82,90 +104,69 @@ const Users = () => {
           <tr className=" border-b">
             <th className="p-3 text-start text-gray ">{t("UserName")}</th>
             <th className="p-3 text-start text-gray">{t("role")}</th>
-            <th className="p-3 text-start text-gray">{t("Op. NO.")}</th>
+            {/* <th className="p-3 text-start text-gray">{t("Op. NO.")}</th> */}
             <th className="p-3 text-start text-gray">{t("Package")}</th>
             <th className="p-3 text-start text-gray"></th>
             <th className="py-3 text-start text-purple flex items-center gap-1">
               <span>{t("All")}</span>
               <span>
                 <TfiFilter />
-              </span>{" "}
+              </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          {/* Table rows */}
-          {[
-            {
-              name: "user name",
-              type: "consultant",
-              opNo: "123",
-              package: "Request",
-            },
-            {
-              name: "user name",
-              type: "Contractor",
-              opNo: "123",
-              package: "Request",
-            },
-            {
-              name: "user name",
-              type: "owner",
-              opNo: "123",
-              package: "Request plus",
-            },
-            {
-              name: "user name",
-              type: "consultant",
-              opNo: "123",
-              package: "Request full plus",
-            },
-            {
-              name: "user name",
-              type: "owner",
-              opNo: "123",
-              package: "Request",
-            },
-            {
-              name: "user name",
-              type: "Contractor",
-              opNo: "123",
-              package: "Request plus",
-            },
-            {
-              name: "user name",
-              type: "consultant",
-              opNo: "123",
-              package: "Request full plus",
-            },
-          ].map((user, index) => (
-            <tr key={index} className=" shadow-sm rounded-2xl ">
-              <td className="p-3 flex items-center gap-2">
-                <img
-                  src="https://placehold.co/40x40/violet/white.png"
-                  alt="user"
-                  className="rounded-full mr-2"
-                />
-                <span>{user.name}</span>
-              </td>
-              <td className="p-3">{user.type}</td>
-              <td className="p-3">{user.opNo}</td>
-              <td className="p-3">{user.package}</td>
-              <td className="p-3 flex space-x-4 rtl:space-x-reverse">
-                <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
-                  {t("StopTheUser")}
-                </button>
-                <button className="bg-red text-white px-4 py-2 rounded-lg">
-                  {t("Delete")}
-                </button>
-              </td>
-              <td>
-                <Link to={"/User"} className="">
-                  <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
-                </Link>
-              </td>
-            </tr>
-          ))}
+          {loading ? (
+            Array(6)
+              .fill()
+              .map((_, idx) => (
+                <tr key={idx}>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                </tr>
+              ))
+          ) : (
+            <>
+              {Users?.results?.map((user, idx) => (
+                <tr key={idx} className=" shadow-sm rounded-2xl ">
+                  <td className="p-3 flex items-center gap-2">
+                    <ProfileAvatar
+                      profilePic={user.profilePic}
+                      name={user.name}
+                      alt={"User Avatar"}
+                    />
+                    <span>{user.name}</span>
+                  </td>
+                  <td className="p-3">{user.userType}</td>
+                  {/* <td className="p-3">{user.}</td> */}
+                  <td className="p-3">{user.plan.name}</td>
+                  <td className="p-3 flex space-x-4 rtl:space-x-reverse">
+                    <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
+                      {t("StopTheUser")}
+                    </button>
+                    <button className="bg-red text-white px-4 py-2 rounded-lg">
+                      {t("Delete")}
+                    </button>
+                  </td>
+                  <td>
+                    <Link to={"/User"} className="">
+                      <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </table>
       {/*  mobile view */}

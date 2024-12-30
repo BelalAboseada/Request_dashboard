@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./index.scss";
 import { BrowserRouter } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageContext.jsx";
+import "react-loading-skeleton/dist/skeleton.css";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.js";

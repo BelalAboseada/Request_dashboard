@@ -4,17 +4,104 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { HiDotsVertical, HiUserAdd } from "react-icons/hi";
 import { IoIosArrowForward } from "react-icons/io";
 import { TbCashBanknoteFilled } from "react-icons/tb";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PackageChart from "../../components/Charts/PackageChart";
 import { t } from "i18next";
+import { getCounters, getMostModels, getNewUsers } from "../../Services/api";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import ProfileAvatar from "../../components/profilePic/profilePic";
+import { format } from "date-fns";
+
+const generateColor = (key) => {
+  const colors = [
+    "#0095FF",
+    "#81D4C2",
+    "#8744A4",
+    "#FFB926",
+    "#FC887B",
+    "#30B0C7",
+  ];
+  return colors[key.length % colors.length];
+};
 
 const Home = () => {
+  const [Models, setModels] = useState([]);
+  const [NewUsers, setNewUsers] = useState([]);
+  const [Counters, setCounters] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [ModelsRes, NewUsersRes, CountersRes] = await Promise.all([
+          getMostModels(),
+          getNewUsers(),
+          getCounters(),
+        ]);
+
+        const transformedData = Object.entries(ModelsRes.results).map(
+          ([key, value]) => ({
+            name: key.replace(/([A-Z])/g, " $1").trim(),
+            popularity: `${value.percentage.toFixed(1)}%`,
+            count: value.count,
+            color: generateColor(key),
+          })
+        );
+        const transformedCounters = Object.entries(CountersRes).map(
+          ([key, value]) => ({
+            name: key.replace(/([A-Z])/g, " $1").trim(),
+            count: value,
+            color: generateColor(key),
+          })
+        );
+        console.log(transformedCounters);
+        
+
+        setModels(transformedData);
+        setNewUsers(NewUsersRes.results);
+        setCounters(transformedCounters);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    return format(new Date(date), "yyyy-MM-dd");
+  };
   return (
     <div className="Home p-4">
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <div
+        {Counters.map((count, idx) => (
+          <div
+            key={idx}
+            className="col-span-1 rounded-2xl p-3 "
+            style={{
+              backgroundColor: `${count.color}21`,
+            }}
+          >
+            <span className="">
+              <LuUsers2 className="w-10 h-10 text-white bg-yellow p-2 rounded-full " />
+            </span>
+            <p className="font-semibold text-2xl my-2">{count.count}</p>
+            <h5 className="text-gray my-2">{t(`${count.name}`)}</h5>
+            <span
+              style={{
+                color: "#4079ED",
+              }}
+              className="mb-2"
+            >
+              +8% {t("LastWeek")}
+            </span>
+          </div>
+        ))}
+        {/* <div
           className="col-span-1 rounded-2xl p-3 "
           style={{
             backgroundColor: "rgba(250, 190, 90, 0.21)",
@@ -113,7 +200,7 @@ const Home = () => {
           >
             +8% {t("LastWeek")}
           </span>
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 my-3">
         <div className="col-span-3 card p-4 bg-white rounded-xl shadow-md">
@@ -140,58 +227,49 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {[
-                {
-                  name: "Approval of general",
-                  popularity: "45%",
-                  color: "#0095FF",
-                },
-                { name: "Table of", popularity: "43%", color: "#81D4C2" },
-                { name: "Work", popularity: "18%", color: "#8744A4" },
-                { name: "Approval of", popularity: "25%", color: "#FFB926" },
-                {
-                  name: "Request for Receipt of",
-                  popularity: "24%",
-                  color: "#FC887B",
-                },
-                {
-                  name: "Material Inspection",
-                  popularity: "25%",
-                  color: "#30B0C7",
-                },
-              ].map((model, idx) => (
-                <React.Fragment key={idx}>
-                  <tr className="">
-                    <td style={{ color: "#444A6D" }} className="py-2">
-                      {idx + 1}
-                    </td>
-                    <td style={{ color: "#444A6D" }} className="py-2">
-                      {model.name}
-                    </td>
-                    <td
-                      style={{ color: "#444A6D" }}
-                      className="text-right py-2"
-                    >
-                      <span
-                        className="p-1 rounded-md"
-                        style={{
-                          color: model.color,
-                          border: `1px solid ${model.color}`,
-                        }}
-                      >
-                        {model.popularity}
-                      </span>
-                    </td>
-                  </tr>
-                  {idx < 5 && (
-                    <tr>
-                      <td colSpan="3">
-                        <hr className="border-gray-200 my-1" />
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
+              {loading
+                ? Array(6)
+                    .fill()
+                    .map((_, idx) => (
+                      <tr key={idx}>
+                        <td colSpan="3" className="text-center py-2">
+                          <Skeleton height={20} baseColor="#F1F5F9" />
+                        </td>
+                      </tr>
+                    ))
+                : Models.map((model, idx) => (
+                    <React.Fragment key={idx}>
+                      <tr>
+                        <td style={{ color: "#444A6D" }} className="py-2">
+                          {idx + 1}
+                        </td>
+                        <td style={{ color: "#444A6D" }} className="py-2">
+                          {model.name}
+                        </td>
+                        <td
+                          style={{ color: "#444A6D" }}
+                          className="text-right py-2"
+                        >
+                          <span
+                            className="p-1 rounded-md"
+                            style={{
+                              color: model.color,
+                              border: `1px solid ${model.color}`,
+                            }}
+                          >
+                            {model.popularity}
+                          </span>
+                        </td>
+                      </tr>
+                      {idx < Models.length - 1 && (
+                        <tr>
+                          <td colSpan="3">
+                            <hr className="border-gray-200 my-1" />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
             </tbody>
           </table>
         </div>
@@ -274,45 +352,37 @@ const Home = () => {
               <th className="p-2">{t("type")}</th>
               <th className="p-2">{t("Registration Date")}</th>
               <th className="p-2">{t("Package")}</th>
-              <th className="p-2"></th>
+              {/* <th className="p-2"></th> */}
             </tr>
           </thead>
           <tbody>
-            {Array(5)
-              .fill({
-                name: "Ahmed Mohamed",
-                email: "ahmed@example.com",
-                type: "Owner",
-                date: "Today",
-                package: "Request",
-              })
-              .map((user, index) => (
-                <tr key={index}>
-                  <td className="p-2">
-                    <div className="flex items-center gap-2">
-                      <div className="avatar">
-                        <img
-                          src="https://via.placeholder.com/100.png"
-                          alt="User Avatar"
-                          className="w-8 h-8 rounded-full"
-                        />
-                      </div>
-                      <div>
-                        <p>{user.name}</p>
-                        <span className="text-gray-400 text-xs">
-                          {user.email}
-                        </span>
-                      </div>
+            {NewUsers.map((user, index) => (
+              <tr key={index}>
+                <td className="p-2">
+                  <div className="flex items-center gap-2">
+                    <div className="avatar">
+                      <ProfileAvatar
+                        profilePic={user.profilePic}
+                        name={user.name}
+                        alt={"User Avatar"}
+                      />
                     </div>
-                  </td>
-                  <td className="p-2">{user.type}</td>
-                  <td className="p-2">{user.date}</td>
-                  <td className="p-2">{user.package}</td>
-                  <td className="p-2">
-                    <HiDotsVertical />
-                  </td>
-                </tr>
-              ))}
+                    <div>
+                      <p>{user.name}</p>
+                      <span className="text-gray-400 text-xs">
+                        {user.email}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td className="p-2">{user.userType}</td>
+                <td className="p-2">{formatDate(user.createdAt)}</td>
+                <td className="p-2">{user.plan.name}</td>
+                {/* <td className="p-2">
+                  <HiDotsVertical />
+                </td> */}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -3,7 +3,7 @@ import authReducer from "./slices/authSlice";
 
 export const store = configureStore({
   reducer: {
-    adminAuth: authReducer,
+    auth: authReducer,
   },
   devTools: import.meta.env.VITE_NODE_ENV !== "production",
 });

@@ -34,13 +34,13 @@ const ProfileAvatar = ({ name, profilePic, className }) => {
 
   return profilePic ? (
     <img
-      src={`https://api.request-sa.com/${profilePic}`}
+      src={`${import.meta.env.VITE_AVATAR_URL}${profilePic}`}
       alt="avatar"
       className={`rounded-full   w-9 h-9 ${className} object-cover`}
     />
   ) : (
     <div
-      className={`user-profile-image flex items-center justify-center w-9 h-9 ${className} rounded-lg text-white font-bold`}
+      className={`user-profile-image flex items-center justify-center w-9 h-9 ${className} rounded-full text-white font-bold`}
       style={{ backgroundColor: randomColor }}
     >
       {renderInitials(name)}

@@ -14,7 +14,7 @@ const getUserFromLocalStorage = () => {
 
 const initialState = {
   admin: getUserFromLocalStorage(),
-  token: localStorage.getItem("adminToken") || null,
+  adminToken: localStorage.getItem("adminToken") || null,
   isAuthenticated:
     !!localStorage.getItem("adminToken") && !!localStorage.getItem("admin"),
   isLoading: false,
@@ -25,7 +25,6 @@ const initialState = {
     notifications: false,
     renewalSubscription: false,
   },
-  
 };
 
 const authSlice = createSlice({
@@ -37,19 +36,23 @@ const authSlice = createSlice({
       state.error = null;
     },
     authSuccess(state, action) {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      const { admin, adminToken } = action.payload;
+      state.admin = admin;
+      state.adminToken = adminToken;
       state.isAuthenticated = true;
       state.isLoading = false;
       state.error = null;
+      // Persist data to local storage
+      localStorage.setItem("admin", JSON.stringify(admin));
+      localStorage.setItem("adminToken", adminToken);
     },
     authFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
     logoutSuccess(state) {
-      state.user = null;
-      state.token = null;
+      state.admin = null;
+      state.adminToken = null;
       state.isAuthenticated = false;
     },
     updateUserPreferences(state, action) {

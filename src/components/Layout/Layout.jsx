@@ -7,9 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from "../../Routes/AppRoutes";
 import Header from "../Header/Header";
 import Sidebar from "../SideBar/Sidebar";
+import { useLocation } from "react-router-dom";
 
 const Layout = () => {
-  // const location = useLocation();
+  const location = useLocation();
   // useAuthRedirect();
   const options = {
     position: "bottom-right",
@@ -20,7 +21,7 @@ const Layout = () => {
     draggable: true,
     progress: undefined,
   };
-  const noSidebarRoutes = ["/LogIn", "*", "/404"];
+  const noSidebarRoutes = ["/LogIn","*", "/404"];
 
   const showSidebar = !noSidebarRoutes.includes(location.pathname);
 

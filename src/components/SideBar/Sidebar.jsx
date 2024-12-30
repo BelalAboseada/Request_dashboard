@@ -14,10 +14,12 @@ import { IoAnalyticsOutline } from "react-icons/io5";
 import { FaUser, FaUsers } from "react-icons/fa6";
 import { GiSettingsKnobs } from "react-icons/gi";
 import { AiFillHome } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.scss";
 import { t } from "i18next";
 import logo from "../../assets/images/logo.png";
+import { useDispatch } from "react-redux";
+import { handleLogout } from "../../redux/services/authServices";
 
 const Sidebar = () => {
   const [Open, setOpen] = useState(false);
@@ -25,6 +27,8 @@ const Sidebar = () => {
   const [isProfileActive, setIsProfileActive] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -76,15 +80,18 @@ const Sidebar = () => {
   const handleItemClick = (index) => {
     setActiveIndex(index);
   };
+  const Logout = () => {
+    dispatch(handleLogout());
+    navigate("/LogIn");
+  };
 
   return (
     <div className="Sidebar  rtl:left-0">
-      <div
+      <aside
         className={` sidebar bg-white shadow-md  h-full py-5 pt-8 relative transition-custom duration-500 hidden lg:flex flex-col
         w-72
         `}
       >
-       
         <div className={`flex gap-2 items-center profile py-6 px-5 `}>
           <Link
             to="/"
@@ -99,11 +106,10 @@ const Sidebar = () => {
                 className="rounded-full  w-12 h-12 object-contain relative  "
               />
             </div>
-       
-              <div className="flex flex-col">
-                <span className="font-inter font-bold text-sm ">Request</span>
-              </div>
-           
+
+            <div className="flex flex-col">
+              <span className="font-inter font-bold text-sm ">Request</span>
+            </div>
           </Link>
         </div>
         <div
@@ -127,11 +133,20 @@ const Sidebar = () => {
               >
                 {item.icon}
               </span>
-              <p > {item.title}</p>
+              <p> {item.title}</p>
             </Link>
           ))}
+          <button
+            onClick={Logout}
+            className={`text-sm font-semibold font-inter text-gray transition-custom duration-custom flex items-center gap-3 py-5 px-5 `}
+          >
+            <span>
+              <MdLogout className="w-6 h-6" />
+            </span>
+            <span>{t("logout")}</span>
+          </button>
         </div>
-      </div>
+      </aside>
     </div>
   );
 };
