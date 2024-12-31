@@ -7,117 +7,58 @@ import StatusHeader from "../../components/StatusHeader/StatusHeader";
 import { Link } from "react-router-dom";
 import { Progress } from "@material-tailwind/react";
 import Pagination from "../../components/UI/Pagination/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BoardViewProject from "../../components/boardView/boardViewProject";
+import { getProjects } from "../../Services/api";
+import ProfileAvatar from "../../components/profilePic/profilePic";
 
 const Projects = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
+  const [Projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+    const [Status, setStatus] = useState("all");
 
   // Handler for page changes
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const buttons = [
-    { label: "Approved", value: "Approved" },
-    { label: "Waiting", value: "Waiting" },
-    { label: "Denied", value: "Denied" },
-    { label: "Finished", value: "Finished" },
+  const buttonData = [
+    { label: t("All"), value: "all" },
+    { label: t("Waiting"), value: "waiting" },
+    { label: t("working"), value: "working" },
+    { label: t("completed"), value: "completed" },
+    { label: t("Delayed"), value: "delayed" },
   ];
 
-  const projects = [
-    {
-      name: "Project Name",
-      status: "High",
-      progress: 70,
-      budget: 1234,
-      startDate: "10 Jan",
-      dueDate: "29 Aug",
-      teamMembers: [
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-      ],
-    },
-    {
-      name: "Project Name",
-      status: "High",
-      progress: 70,
-      budget: 1234,
-      startDate: "10 Jan",
-      dueDate: "29 Aug",
-      teamMembers: [
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-      ],
-    },
-    {
-      name: "Project Name",
-      status: "High",
-      progress: 70,
-      budget: 1234,
-      startDate: "10 Jan",
-      dueDate: "29 Aug",
-      teamMembers: [
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-      ],
-    },
-    {
-      name: "Project Name",
-      status: "High",
-      progress: 70,
-      budget: 1234,
-      startDate: "10 Jan",
-      dueDate: "29 Aug",
-      teamMembers: [
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-      ],
-    },
-    {
-      name: "Project Name",
-      status: "High",
-      progress: 70,
-      budget: 1234,
-      startDate: "10 Jan",
-      dueDate: "29 Aug",
-      teamMembers: [
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-        {
-          name: "john",
-          profilePic: "https://loremflickr.com/320/240/paris/all",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await getProjects(Status);
+        setProjects(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [Status]);
+   const handleFilterChange = (value) => {
+     setStatus(value);
+   };
+
+//  format date 
+  const formatDate = (date) => {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="Projects p-2 lg:p-4">
@@ -141,10 +82,13 @@ const Projects = () => {
             <p className="font-semibold  text-xl text-purple hidden lg:block">
               {t("totalProjects")}
             </p>
-            <span className="font-semibold"> 122</span>
+            <span className="font-semibold"> {Projects?.count}</span>
           </div>
         </div>
-        <StatusHeader buttons={buttons} />
+        <StatusHeader
+          buttons={buttonData}
+          onFilterChange={handleFilterChange}
+        />
 
         <table className="w-full table-auto mt-10 rounded-3xl  bg-white hidden lg:table ">
           <thead>
@@ -161,7 +105,7 @@ const Projects = () => {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project, index) => (
+            {Projects?.results?.map((project, index) => (
               <tr key={index} className=" shadow-sm rounded-2xl ">
                 <td className="p-3">{project.name}</td>
                 <td className="p-3">
@@ -173,30 +117,47 @@ const Projects = () => {
                 </td>
                 <td className="p-3">
                   <Progress
-                    value={25}
+                    value={project.progress}
                     size="sm"
-                    color="purple"
+                    color={project.progress === 0 ? "gray" : "purple"}
                     trackColor="gray"
                     barProps={{
                       style: {
                         height: "5px",
-                        backgroundColor: "purple",
+                        backgroundColor:
+                          project.progress === 0 ? "lightgray" : "purple",
                       },
                     }}
                   />
+                  {project.progress === 0 && (
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        fontSize: "12px",
+                        color: "gray",
+                      }}
+                    >
+                      No progress yet
+                    </div>
+                  )}
                 </td>
 
                 <td className="p-3">
                   <div className="avatars flex items-center  -space-x-2">
-                    {project.teamMembers.map((member, idx) => (
-                      <div key={idx}>
-                        <img
-                          src={member.profilePic}
-                          alt={member.name}
-                          className="w-8 h-8 rounded-full"
-                        />
-                      </div>
-                    ))}
+                    {project?.members.length > 0 ? (
+                      project?.members?.map((member, idx) => (
+                        <div key={idx}>
+                          <ProfileAvatar
+                            profilePic={member.profilePic}
+                            name={member.name}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-gray text-sm font-normal">
+                        No team members
+                      </span>
+                    )}
                   </div>
                 </td>
                 <td className="p-3">{project.budget}$</td>
@@ -211,9 +172,9 @@ const Projects = () => {
                         }}
                       >
                         {t("sDate")} :
-                      </span>{" "}
+                      </span>
                       <span className="text-gray text-xs">
-                        {project.startDate}
+                        {formatDate(project.sDate)}
                       </span>
                     </div>
                     <div>
@@ -227,7 +188,7 @@ const Projects = () => {
                       </span>
                       <span className="text-gray text-xs">
                         {" "}
-                        {project.dueDate}
+                        {formatDate(project.dueDate)}
                       </span>
                     </div>
                   </div>
@@ -245,7 +206,7 @@ const Projects = () => {
         </table>
         {/*  mobile view */}
         <div className="block lg:hidden">
-          {projects.map((project, idx) => (
+          {Projects?.results?.map((project, idx) => (
             // <div
             //   key={idx}
             //   className="gap-4 p-3 m-3 rounded-3xl  bg-white  shadow-sm "
@@ -294,4 +255,3 @@ const Projects = () => {
 };
 
 export default Projects;
-

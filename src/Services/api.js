@@ -108,8 +108,7 @@ export const deleteUser = async (userId) => {
   }
 };
 
-// get user data 
-
+// get user data
 export const getUserDetails = async (userId) => {
   try {
     const response = await axiosInstance.get(`users/${userId}`);
@@ -118,6 +117,21 @@ export const getUserDetails = async (userId) => {
   } catch (error) {
     console.error(
       "Error deleting user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+// get projects
+export const getProjects = async (status) => {
+  try {
+    const response = await axiosInstance.get(`project?status=${status}`);
+    console.log("Projects => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error getting projects:",
       error.response ? error.response.data : error.message
     );
     throw error;
