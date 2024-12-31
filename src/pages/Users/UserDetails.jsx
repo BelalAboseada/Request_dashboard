@@ -2,50 +2,75 @@ import { t } from "i18next";
 import avatar from "../../assets/images/avatar.png";
 import UiInput from "../../components/UI/Input/UIInput";
 import Datepicker from "react-tailwindcss-datepicker";
-import {  Progress } from "@material-tailwind/react";
+import { Progress } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { IoInformationCircleOutline, IoTrendingDownOutline, IoTrendingUpOutline } from "react-icons/io5";
-import masterCard from "../../assets/images/MasterCard.png"
+import {
+  IoInformationCircleOutline,
+  IoTrendingDownOutline,
+  IoTrendingUpOutline,
+} from "react-icons/io5";
+import masterCard from "../../assets/images/MasterCard.png";
 import { MdDelete, MdOutlineMoreHoriz } from "react-icons/md";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getUserDetails } from "../../Services/api";
 
 const UserDetails = () => {
+  const [User, setUser] = useState("");
+  const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const { userId } = location.state || {};
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await getUserDetails();
+        setUser(data.results);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-     const chart = {
-       series: [44, 55, 67],
-       chart: {
-         height: 50,
-         type: "radialBar",
-       },
-       plotOptions: {
-         radialBar: {
-           offsetY: 0,
-           startAngle: -180,
-           endAngle: 90,
-           hollow: {
-             margin: 5,
-             size: "50%",
-             background: "transparent",
-             image: undefined,
-           },
-           dataLabels: {
-             name: {
-               fontSize: "16px",
-             },
-             value: {
-               fontSize: "16px",
-             },
-             total: {
-               show: false,
-             },
-           },
-           rounded: true,
-         },
-       },
-       labels: ["Completed", "In-Progress", "Delayed"],
-       colors: ["#81D4C2", "#FFB926", "#FF5630"],
-     };
+  const chart = {
+    series: [44, 55, 67],
+    chart: {
+      height: 50,
+      type: "radialBar",
+    },
+    plotOptions: {
+      radialBar: {
+        offsetY: 0,
+        startAngle: -180,
+        endAngle: 90,
+        hollow: {
+          margin: 5,
+          size: "50%",
+          background: "transparent",
+          image: undefined,
+        },
+        dataLabels: {
+          name: {
+            fontSize: "16px",
+          },
+          value: {
+            fontSize: "16px",
+          },
+          total: {
+            show: false,
+          },
+        },
+        rounded: true,
+      },
+    },
+    labels: ["Completed", "In-Progress", "Delayed"],
+    colors: ["#81D4C2", "#FFB926", "#FF5630"],
+  };
   // Date formatting function
   //   const formatDate = (date) => {
   //     if (!date) return "";
@@ -65,9 +90,9 @@ const UserDetails = () => {
             </span>
           </div>
           <div className="flex  items-center  gap-2">
-            <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
+            {/* <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
               {t("StopTheUser")}
-            </button>
+            </button> */}
             <button className="bg-red text-white px-4 py-2 rounded-lg">
               {t("Delete")}
             </button>

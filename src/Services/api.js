@@ -93,19 +93,33 @@ export const getAllUsers = async () => {
   }
 };
 
+//  delete user
+export const deleteUser = async (userId) => {
+  try {
+    const response = await axiosInstance.delete(`users/${userId}`);
+    console.log("User deleted successfully => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
 
-//  delete user 
+// get user data 
 
-    export const deleteUser = async (userId) => {
-      try {
-        const response = await axiosInstance.delete(`users/${userId}`);
-        console.log("User deleted successfully => ", response.data);
-        return response.data;
-      } catch (error) {
-        console.error(
-          "Error deleting user:",
-          error.response ? error.response.data : error.message
-        );
-        throw error;
-      }
-    };
+export const getUserDetails = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`users/${userId}`);
+    console.log("User deleted successfully => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error deleting user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};

@@ -51,13 +51,14 @@ const Home = () => {
         );
         const transformedCounters = Object.entries(CountersRes).map(
           ([key, value]) => ({
-            name: key.replace(/([A-Z])/g, " $1").trim(),
-            count: value,
+            value: key,
+            name: value.name,
+            count: value.count,
             color: generateColor(key),
+            growth: value.growth,
           })
         );
         console.log(transformedCounters);
-        
 
         setModels(transformedData);
         setNewUsers(NewUsersRes.results);
@@ -83,11 +84,35 @@ const Home = () => {
             key={idx}
             className="col-span-1 rounded-2xl p-3 "
             style={{
-              backgroundColor: `${count.color}21`,
+              background: `${
+                count.value === "users"
+                  ? "rgba(250, 190, 90, 0.21)"
+                  : count.value === "projects"
+                  ? "rgba(252, 136, 123, 0.21)"
+                  : count.value === "tickets"
+                  ? "rgba(134, 227, 206, 0.2)"
+                  : count.value === "tasks"
+                  ? "rgba(0, 122, 255, 0.1)"
+                  : count.value === "customers"
+                  ? "rgba(204, 171, 218, 0.18)"
+                  : ""
+              }`,
             }}
           >
             <span className="">
-              <LuUsers2 className="w-10 h-10 text-white bg-yellow p-2 rounded-full " />
+              {count.value === "users" ? (
+                <LuUsers2 className="w-10 h-10 text-white bg-yellow p-2 rounded-full " />
+              ) : count.value === "projects" ? (
+                <MdSpaceDashboard className="w-10 h-10 text-white bg-red p-2 rounded-full " />
+              ) : count.value === "tickets" ? (
+                <TbCashBanknoteFilled className="w-10 h-10 text-white bg-blue p-2 rounded-full " />
+              ) : count.value === "tasks" ? (
+                <FaClipboardList className="w-10 h-10 text-white  p-2 rounded-full bg-cyan-500" />
+              ) : count.value === "customers" ? (
+                <HiUserAdd className="w-10 h-10 text-white bg-purple p-2 rounded-full " />
+              ) : (
+                ""
+              )}
             </span>
             <p className="font-semibold text-2xl my-2">{count.count}</p>
             <h5 className="text-gray my-2">{t(`${count.name}`)}</h5>
@@ -97,7 +122,7 @@ const Home = () => {
               }}
               className="mb-2"
             >
-              +8% {t("LastWeek")}
+              +{count.growth}% {t("LastWeek")}
             </span>
           </div>
         ))}

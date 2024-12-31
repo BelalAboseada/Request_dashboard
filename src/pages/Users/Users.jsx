@@ -13,7 +13,6 @@ import Loader from "../../components/Loader/Loader";
 import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
 const Users = () => {
-  
   const [Users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -32,21 +31,19 @@ const Users = () => {
     fetchData();
   }, []);
 
-
-const handleDelete = async (userId) => {
-  try {
-    await deleteUser(userId);
-    setUsers((prevUsers) => ({
-      ...prevUsers,
-      results: prevUsers.results.filter((user) => user._id !== userId),
-    }));
-    toast.success("User deleted successfully!");
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    toast.error("Failed to delete user.");
-  }
-};
-
+  const handleDelete = async (userId) => {
+    try {
+      await deleteUser(userId);
+      setUsers((prevUsers) => ({
+        ...prevUsers,
+        results: prevUsers.results.filter((user) => user._id !== userId),
+      }));
+      toast.success("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user.");
+    }
+  };
 
   return (
     <div className="Users p-3">
@@ -183,7 +180,12 @@ const handleDelete = async (userId) => {
                     </button>
                   </td>
                   <td>
-                    <Link to={`/User/${user._id}`} className="">
+                    <Link
+                      to={`/User/${user._id}`}
+                      state={{
+                        userId: user._id,
+                      }}
+                    >
                       <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
                     </Link>
                   </td>
@@ -248,5 +250,3 @@ const handleDelete = async (userId) => {
 };
 
 export default Users;
-
-
