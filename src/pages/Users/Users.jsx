@@ -7,11 +7,13 @@ import {
 } from "react-icons/md";
 import { TfiFilter } from "react-icons/tfi";
 import { Link } from "react-router-dom";
-import { getAllUsers } from "../../Services/api";
+import { deleteUser, getAllUsers } from "../../Services/api";
 import ProfileAvatar from "../../components/profilePic/profilePic";
 import Loader from "../../components/Loader/Loader";
 import Skeleton from "react-loading-skeleton";
+import { toast } from "react-toastify";
 const Users = () => {
+  
   const [Users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +31,23 @@ const Users = () => {
     };
     fetchData();
   }, []);
+
+
+const handleDelete = async (userId) => {
+  try {
+    await deleteUser(userId);
+    setUsers((prevUsers) => ({
+      ...prevUsers,
+      results: prevUsers.results.filter((user) => user._id !== userId),
+    }));
+    toast.success("User deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    toast.error("Failed to delete user.");
+  }
+};
+
+
   return (
     <div className="Users p-3">
       <div className="admins grid grid-cols-1 lg:grid-cols-3 gap-3 my-3">
@@ -105,6 +124,7 @@ const Users = () => {
             <th className="p-3 text-start text-gray ">{t("UserName")}</th>
             <th className="p-3 text-start text-gray">{t("role")}</th>
             {/* <th className="p-3 text-start text-gray">{t("Op. NO.")}</th> */}
+            <th className="p-3 text-start text-gray">{t("Email")}</th>
             <th className="p-3 text-start text-gray">{t("Package")}</th>
             <th className="p-3 text-start text-gray"></th>
             <th className="py-3 text-start text-purple flex items-center gap-1">
@@ -149,17 +169,21 @@ const Users = () => {
                   </td>
                   <td className="p-3">{user.userType}</td>
                   {/* <td className="p-3">{user.}</td> */}
+                  <td className="p-3">{user.email}</td>
                   <td className="p-3">{user.plan.name}</td>
                   <td className="p-3 flex space-x-4 rtl:space-x-reverse">
-                    <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
+                    {/* <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
                       {t("StopTheUser")}
-                    </button>
-                    <button className="bg-red text-white px-4 py-2 rounded-lg">
+                    </button> */}
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="bg-red text-white px-4 py-2 rounded-lg"
+                    >
                       {t("Delete")}
                     </button>
                   </td>
                   <td>
-                    <Link to={"/User"} className="">
+                    <Link to={`/User/${user._id}`} className="">
                       <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
                     </Link>
                   </td>
@@ -173,60 +197,17 @@ const Users = () => {
 
       <div className="block lg:hidden">
         {" "}
-        {[
-          {
-            name: "user name",
-            type: "consultant",
-            opNo: "123",
-            package: "Request",
-          },
-          {
-            name: "user name",
-            type: "Contractor",
-            opNo: "123",
-            package: "Request",
-          },
-          {
-            name: "user name",
-            type: "owner",
-            opNo: "123",
-            package: "Request plus",
-          },
-          {
-            name: "user name",
-            type: "consultant",
-            opNo: "123",
-            package: "Request full plus",
-          },
-          {
-            name: "user name",
-            type: "owner",
-            opNo: "123",
-            package: "Request",
-          },
-          {
-            name: "user name",
-            type: "Contractor",
-            opNo: "123",
-            package: "Request plus",
-          },
-          {
-            name: "user name",
-            type: "consultant",
-            opNo: "123",
-            package: "Request full plus",
-          },
-        ].map((user, index) => (
+        {Users?.results?.map((user, index) => (
           <div
             key={index}
             className="gap-4 p-3 m-3 rounded-3xl  bg-white  shadow-sm "
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-start gap-2">
-                <img
-                  src="https://placehold.co/40x40/violet/white.png"
-                  alt="user"
-                  className="rounded-full mr-2"
+                <ProfileAvatar
+                  profilePic={user.profilePic}
+                  name={user.name}
+                  alt={"User Avatar"}
                 />
                 <span>{user.name}</span>
               </div>
@@ -236,22 +217,26 @@ const Users = () => {
               </div>
             </div>
             <div className="flex items-center justify-between gap-2 my-2">
-              <span>{user.type}</span>
-              <p>
+              <span>{user.userType}</span>
+              <span>{user.email}</span>
+              {/* <p>
                 <span className="font-bold"> {t("Op. NO.")} :</span>
                 {user.opNo}
-              </p>
+              </p> */}
             </div>
             <div className="w-fit">
-              <span className="font-bold">{user.package}</span>
+              <span className="font-bold">{user.plan.name}</span>
             </div>
 
             <div className="flex items-center gap-3 mt-4">
-              <button className="bg-yellow text-white font-medium  w-full  px-4 py-2 rounded-lg">
+              {/* <button className="bg-yellow text-white font-medium  w-full  px-4 py-2 rounded-lg">
                 {t("StopTheUser")}
-              </button>
+              </button> */}
 
-              <button className="bg-red text-white w-full px-4 py-2 rounded-lg">
+              <button
+                onClick={() => handleDelete(user._id)}
+                className="bg-red text-white w-full px-4 py-2 rounded-lg"
+              >
                 {t("Delete")}
               </button>
             </div>
@@ -263,3 +248,5 @@ const Users = () => {
 };
 
 export default Users;
+
+

@@ -29,7 +29,7 @@ export const publicRoutes = [
 export const protectedRoutes = [
   { path: "/", component: <Home /> },
   { path: "/Users", component: <Users /> },
-  { path: "/User", component: <UserDetails /> },
+  { path: "/User/:id", component: <UserDetails /> },
   { path: "/Projects", component: <Projects /> },
   { path: "/Project", component: <ProjectDetails /> },
   { path: "/AllTasks", component: <Tasks /> },
