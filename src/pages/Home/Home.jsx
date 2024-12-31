@@ -122,7 +122,7 @@ const Home = () => {
               }}
               className="mb-2"
             >
-              +{count.growth}% {t("LastWeek")}
+              +{count.growth} {t("LastWeek")}
             </span>
           </div>
         ))}
