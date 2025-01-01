@@ -2,12 +2,35 @@ import { CircularProgress } from "@mui/joy";
 import { t } from "i18next";
 import { MdCalendarToday } from "react-icons/md";
 import Input from "../../components/UI/Input/Input";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaFileLines } from "react-icons/fa6";
 import { BiTask } from "react-icons/bi";
 import { TagsChart } from "../../components/TagsChart/TagsChart";
+import { useEffect, useState } from "react";
+import { getProjectById } from "../../Services/api";
+import ProfileAvatar from "../../components/profilePic/profilePic";
 
 const ProjectDetails = () => {
+  const location = useLocation();
+  const { projectId } = location.state || {};
+  const [Project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await getProjectById(projectId);
+      setProject(data?.results);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, [projectId]);
+
   const tags = [
     {
       id: 1,
@@ -38,30 +61,39 @@ const ProjectDetails = () => {
             <span className="text-purple font-medium  text-base lg:text-lg">
               {t("ProjectData")}
             </span>
-          </div> 
+          </div>
           <span className="text-gray text-sm">25 Jan, 10.40 PM</span>
         </div>
         <div className="flex justify-between  items-center m-3">
           <div className="flex items-center gap-3">
-            <img
-              src="https://via.placeholder.com/100x100"
-              alt="avatar"
-              className="rounded-full w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
+            <ProfileAvatar
+              profilePic={Project?.owner?.profilePic}
+              name={Project?.owner?.name}
+              className=" w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 text-3xl"
             />
             <div className="flex flex-col ">
-              <span className="font-bold text-base lg:text-lg">John Doe</span>
-              <span className="font-medium text-sm lg:text-base">Owner</span>
+              <span className="font-bold text-base lg:text-lg">
+                {Project?.owner?.name}
+              </span>
+              <span className="font-medium text-sm lg:text-base">
+                {t("Owner")}
+              </span>
             </div>
           </div>
           <div className="flex  items-center gap-3">
-            <span className="font-extrabold text-lg lg:text-2xl text-green">3000$</span>
-            <span className="font-extrabold text-lg lg:text-2xl text-red"> -2500$</span>
+            <span className="font-extrabold text-lg lg:text-2xl text-green">
+              3000$
+            </span>
+            <span className="font-extrabold text-lg lg:text-2xl text-red">
+              {" "}
+              -2500$
+            </span>
           </div>
         </div>
         <div className="wrapper bg-white grid grid-cols-2 rounded-3xl m-2 ">
           <div className="box col-span-2 lg:col-span-1 relative flex flex-col ">
             <div className="head flex items-center  justify-between  my-3 mx-4">
-              <h5 className="font-bold  text-2xl ">project name</h5>
+              <h5 className="font-bold  text-2xl ">{Project?.name}</h5>
               <p className="font-semibold  text-sm">{"Architecture"}</p>
             </div>
 
@@ -114,12 +146,12 @@ const ProjectDetails = () => {
                 <span
                   className={`high w-full text-center py-2 rounded-3xl font-inter font-semibold text-sm mt-2`}
                 >
-                  high
+                  {t(Project?.projectPriority)}
                 </span>
                 <span
                   className={` working w-full text-center py-2 rounded-3xl font-inter font-semibold text-sm mt-2`}
                 >
-                  work on it
+                  {t(Project?.status)}
                 </span>
               </div>
 
@@ -148,7 +180,7 @@ const ProjectDetails = () => {
               disabled
               className="bg-white border border-purple border-solid "
               label={t("Number Of Tasks")}
-              placeholder={"50 task"}
+              value={Project?.taskCount}
             />
             <Input
               disabled

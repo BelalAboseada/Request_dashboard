@@ -109,10 +109,14 @@ export const deleteUser = async (userId) => {
 };
 
 // get user data
-export const getUserDetails = async (userId) => {
+export const getUserDetails = async (userId, token) => {
   try {
-    const response = await axiosInstance.get(`users/${userId}`);
-    console.log("User deleted successfully => ", response.data);
+    const response = await axiosInstance.get(`users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("User details successfully => ", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -132,6 +136,56 @@ export const getProjects = async (status) => {
   } catch (error) {
     console.error(
       "Error getting projects:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+//  get Active Projects By User
+
+export const getActiveProjectsByUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`dashboard/user/${userId}`);
+    console.log("Active Projects By User => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error getting active projects by user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+//  get project performance by user
+
+export const getProjectPerformanceByUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `dashboard/performance/user/${userId}`
+    );
+    console.log("Project Performance By User => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error getting project performance by user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+//  get project by id
+
+export const getProjectById = async (projectId) => {
+  try {
+    const response = await axiosInstance.get(`project/${projectId}`);
+    console.log("Project By Id => ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error getting project by id:",
       error.response ? error.response.data : error.message
     );
     throw error;

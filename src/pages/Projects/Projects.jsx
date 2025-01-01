@@ -11,13 +11,14 @@ import { useEffect, useState } from "react";
 import BoardViewProject from "../../components/boardView/boardViewProject";
 import { getProjects } from "../../Services/api";
 import ProfileAvatar from "../../components/profilePic/profilePic";
+import Skeleton from "react-loading-skeleton";
 
 const Projects = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
   const [Projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
-    const [Status, setStatus] = useState("all");
+  const [Status, setStatus] = useState("all");
 
   // Handler for page changes
   const handlePageChange = (page) => {
@@ -46,11 +47,11 @@ const Projects = () => {
     };
     fetchData();
   }, [Status]);
-   const handleFilterChange = (value) => {
-     setStatus(value);
-   };
+  const handleFilterChange = (value) => {
+    setStatus(value);
+  };
 
-//  format date 
+  //  format date
   const formatDate = (date) => {
     if (!date) return "";
     return new Date(date).toLocaleDateString("en-US", {
@@ -104,146 +105,175 @@ const Projects = () => {
               <th className="py-3 text-start text-purple"></th>
             </tr>
           </thead>
-          <tbody>
-            {Projects?.results?.map((project, index) => (
-              <tr key={index} className=" shadow-sm rounded-2xl ">
-                <td className="p-3">{project.name}</td>
-                <td className="p-3">
-                  <span
-                    className={`${project.status} Tag font-inter font-semibold text-xs text-center py-1 px-1 md:px-4 lg:px-10 rounded-3xl`}
-                  >
-                    {project.status}
-                  </span>
-                </td>
-                <td className="p-3">
-                  <Progress
-                    value={project.progress}
-                    size="sm"
-                    color={project.progress === 0 ? "gray" : "purple"}
-                    trackColor="gray"
-                    barProps={{
-                      style: {
-                        height: "5px",
-                        backgroundColor:
-                          project.progress === 0 ? "lightgray" : "purple",
-                      },
-                    }}
-                  />
-                  {project.progress === 0 && (
-                    <div
-                      style={{
-                        marginTop: "8px",
-                        fontSize: "12px",
-                        color: "gray",
-                      }}
-                    >
-                      No progress yet
-                    </div>
-                  )}
-                </td>
-
-                <td className="p-3">
-                  <div className="avatars flex items-center  -space-x-2">
-                    {project?.members.length > 0 ? (
-                      project?.members?.map((member, idx) => (
-                        <div key={idx}>
-                          <ProfileAvatar
-                            profilePic={member.profilePic}
-                            name={member.name}
-                          />
+          {loading ? (
+            Array(10)
+              .fill()
+              .map((_, idx) => (
+                <tr key={idx}>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                  <td colSpan="1" className="text-center p-2 ">
+                    <Skeleton height={30} baseColor="#F1F5F9" />
+                  </td>
+                </tr>
+              ))
+          ) : (
+            <tbody>
+              {Projects?.results?.length > 0 ? (
+                Projects?.results?.map((project, index) => (
+                  <tr key={index} className="shadow-sm rounded-2xl">
+                    <td className="p-3">{project.name}</td>
+                    <td className="p-3">
+                      <span
+                        className={`${project.status} Tag font-inter font-semibold text-xs text-center py-1 px-1 md:px-4 lg:px-10 rounded-3xl`}
+                      >
+                        {project.status}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <Progress
+                        value={project.progress}
+                        size="sm"
+                        color={project.progress === 0 ? "gray" : "purple"}
+                        trackColor="gray"
+                        barProps={{
+                          style: {
+                            height: "5px",
+                            backgroundColor:
+                              project.progress === 0 ? "lightgray" : "purple",
+                          },
+                        }}
+                      />
+                      {project.progress === 0 && (
+                        <div
+                          style={{
+                            marginTop: "8px",
+                            fontSize: "12px",
+                            color: "gray",
+                          }}
+                        >
+                          No progress yet
                         </div>
-                      ))
-                    ) : (
-                      <span className="text-gray text-sm font-normal">
-                        No team members
-                      </span>
-                    )}
-                  </div>
-                </td>
-                <td className="p-3">{project.budget}$</td>
+                      )}
+                    </td>
 
-                <td className="p-3">
-                  <div className="flex items-center flex-col bg-gray-200 rounded-lg ">
-                    <div>
-                      <span
-                        className=" font-bold text-xs "
-                        style={{
-                          color: "#1976D2",
-                        }}
-                      >
-                        {t("sDate")} :
-                      </span>
-                      <span className="text-gray text-xs">
-                        {formatDate(project.sDate)}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        className=" font-bold text-xs "
-                        style={{
-                          color: "#F44336",
-                        }}
-                      >
-                        {t("dDate")} :
-                      </span>
-                      <span className="text-gray text-xs">
-                        {" "}
-                        {formatDate(project.dueDate)}
-                      </span>
-                    </div>
-                  </div>
-                </td>
+                    <td className="p-3">
+                      <div className="avatars flex items-center  -space-x-2">
+                        {project?.members.length > 0 ? (
+                          project?.members?.map((member, idx) => (
+                            <div key={idx}>
+                              <ProfileAvatar
+                                profilePic={member.profilePic}
+                                name={member.name}
+                              />
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-gray text-sm font-normal">
+                            No team members
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-3">{project.budget}$</td>
 
-                <td className="p-3 flex space-x-4 rtl:space-x-reverse"></td>
-                <td>
-                  <Link to={"/project"} className="">
-                    <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                    <td className="p-3">
+                      <div className="flex items-center flex-col bg-gray-200 rounded-lg ">
+                        <div>
+                          <span
+                            className=" font-bold text-xs "
+                            style={{
+                              color: "#1976D2",
+                            }}
+                          >
+                            {t("sDate")} :
+                          </span>
+                          <span className="text-gray text-xs">
+                            {formatDate(project.sDate)}
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            className=" font-bold text-xs "
+                            style={{
+                              color: "#F44336",
+                            }}
+                          >
+                            {t("dDate")} :
+                          </span>
+                          <span className="text-gray text-xs">
+                            {" "}
+                            {formatDate(project.dueDate)}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="p-3 flex space-x-4 rtl:space-x-reverse"></td>
+                    <td>
+                      <Link
+                        to={`/Project/${project._id}`}
+                        state={{
+                          projectId: project._id,
+                        }}
+                        className=""
+                      >
+                        <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="p-3 text-center text-gray-500">
+                    No projects found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          )}
         </table>
         {/*  mobile view */}
         <div className="block lg:hidden">
-          {Projects?.results?.map((project, idx) => (
-            // <div
-            //   key={idx}
-            //   className="gap-4 p-3 m-3 rounded-3xl  bg-white  shadow-sm "
-            // >
-            //   <div className="flex items-center justify-between">
-            //     <div className="flex items-center justify-start gap-2">
-            //       <span>{project.name}</span>
-            //     </div>
-
-            //     <div className="flex items-center gap-2">
-            //       <MdOutlineKeyboardDoubleArrowRight className="w-8 h-8 text-purple rotate-0 rtl:rotate-180" />
-            //     </div>
-            //   </div>
-            //   <div className="flex items-center justify-between gap-2 my-2">
-            //     <span></span>
-            //     <p></p>
-            //   </div>
-            //   <div className="w-fit">
-            //     <span className="font-bold"></span>
-            //   </div>
-
-            //   <div className="flex items-center justify-between mt-4 ">
-            //     <span className="text-gray text-sm font-normal">{project.startDate}</span>
-            //     <span className="text-gray text-sm font-normal">{project.dueDate}</span>
-            //   </div>
-            // </div>
-            <div key={idx} className="grid grid-cols-1 md:grid-cols-2  gap-2 ">
-              <BoardViewProject
-                ProgressValue={70}
-                sDate={project.startDate}
-                eDate={project.dueDate}
-                NameOfTask={project.name}
-                Status={project.status}
-              />
-            </div>
-          ))}
+          {loading ? (
+            Array(10)
+              .fill()
+              .map((_, idx) => (
+                <div className="my-3" key={idx}>
+                  <Skeleton height={50} baseColor="#F1F5F9" />
+                </div>
+              ))
+          ) : Projects?.results?.length > 0 ? (
+            Projects.results.map((project, idx) => (
+              <div key={idx} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <BoardViewProject
+                  ProgressValue={project.progress}
+                  sDate={formatDate(project.sDate)}
+                  eDate={formatDate(project.dueDate)}
+                  NameOfTask={project.name}
+                  Status={project.status}
+                  // avatars={project.members}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500">No projects found</div>
+          )}
         </div>
+
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

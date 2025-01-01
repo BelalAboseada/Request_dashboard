@@ -12,74 +12,81 @@ import {
 } from "react-icons/io5";
 import masterCard from "../../assets/images/MasterCard.png";
 import { MdDelete, MdOutlineMoreHoriz } from "react-icons/md";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getUserDetails } from "../../Services/api";
+import {
+  deleteUser,
+  getActiveProjectsByUser,
+  getProjectPerformanceByUser,
+  getUserDetails,
+} from "../../Services/api";
+import { useSelector } from "react-redux";
+import ProfileAvatar from "../../components/profilePic/profilePic";
+import { toast } from "react-toastify";
+import PerformanceChart from "../../components/Charts/ProjectsPerformance";
 
 const UserDetails = () => {
+  const token = useSelector((state) => state.auth.adminToken);
   const [User, setUser] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [activeProjects, setActiveProjects] = useState([]);
+  const [projectsPerformance, setProjectsPerformance] = useState([]);
+  const [Usersloading, setUsersLoading] = useState(false);
+  const [activeProjectsLoading, setActiveProjectsLoading] = useState(false);
+  const [projectsPerformanceLoading, setProjectsPerformanceLoading] =
+    useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { userId } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setUsersLoading(true);
+      setActiveProjectsLoading(true);
+      setProjectsPerformanceLoading(true);
       try {
-        const data = await getUserDetails();
-        setUser(data.results);
+        const [UserRes, ActiveProjects, ProjectsPerformanceRes] =
+          await Promise.all([
+            getUserDetails(userId, token),
+            getActiveProjectsByUser(userId),
+            getProjectPerformanceByUser(userId),
+          ]);
+        setUser(UserRes.results);
+        setUsersLoading(false);
+        setActiveProjects(ActiveProjects.results);
+        setActiveProjectsLoading(false);
+        setProjectsPerformance(ProjectsPerformanceRes.results);
+        setProjectsPerformanceLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false);
+        setUsersLoading(false);
+        setActiveProjectsLoading(false);
+        setProjectsPerformanceLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
-  const chart = {
-    series: [44, 55, 67],
-    chart: {
-      height: 50,
-      type: "radialBar",
-    },
-    plotOptions: {
-      radialBar: {
-        offsetY: 0,
-        startAngle: -180,
-        endAngle: 90,
-        hollow: {
-          margin: 5,
-          size: "50%",
-          background: "transparent",
-          image: undefined,
-        },
-        dataLabels: {
-          name: {
-            fontSize: "16px",
-          },
-          value: {
-            fontSize: "16px",
-          },
-          total: {
-            show: false,
-          },
-        },
-        rounded: true,
-      },
-    },
-    labels: ["Completed", "In-Progress", "Delayed"],
-    colors: ["#81D4C2", "#FFB926", "#FF5630"],
+  const handleDelete = async () => {
+    try {
+      await deleteUser(userId);
+      navigate("/Users");
+      toast.success("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user.");
+    }
   };
+
   // Date formatting function
-  //   const formatDate = (date) => {
-  //     if (!date) return "";
-  //     const d = new Date(date);
-  //     const year = d.getFullYear();
-  //     const month = String(d.getMonth() + 1).padStart(2, "0");
-  //     const day = String(d.getDate()).padStart(2, "0");
-  //     return `${year}-${month}-${day}`;
-  //   };
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   return (
     <div className="UserDetails p-4">
       <div className="userDetails bg-white  rounded-2xl shadow-md p-2">
@@ -93,97 +100,89 @@ const UserDetails = () => {
             {/* <button className="bg-yellow text-white font-medium px-4 py-2 rounded-lg">
               {t("StopTheUser")}
             </button> */}
-            <button className="bg-red text-white px-4 py-2 rounded-lg">
+            <button
+              onClick={handleDelete}
+              className="bg-red text-white px-4 py-2 rounded-lg"
+            >
               {t("Delete")}
             </button>
           </div>
         </div>
         <div className="form grid grid-cols-3 lg:grid-cols-7 gap-4 my-3">
           <div className="col-span-1 avatar">
-            <img
-              className="object-cover w-20 h-20 rounded-full"
-              src={avatar}
-              alt=""
+            <ProfileAvatar
+              profilePic={User?.profilePic}
+              name={User?.name}
+              className={`!w-20 !h-20 !text-3xl`}
             />
           </div>
           <div className="col-span-3">
             <UiInput
               type="text"
+              disabled
               id="name"
               label={t("UserName")}
-              value={"Name"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User.name}
               placeholder="Full Name"
             />
             <UiInput
               type="text"
+              disabled
               id="Email"
               label={t("Email")}
-              value={"Email"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User?.email}
               placeholder={t("Email")}
             />
             <UiInput
               type="text"
+              disabled
               id="role"
               label={t("role")}
-              value={"role"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User.role?.jobTitle}
               placeholder="role"
             />
             <UiInput
               type="text"
+              disabled
               id="PhoneNumber"
               label={t("PhoneNumber")}
-              value={"PhoneNumber"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User.phone}
               placeholder="PhoneNumber"
             />
           </div>
           <div className="col-span-3">
             <UiInput
               type="text"
+              disabled
               id="Address"
               label={t("Address")}
-              value={"Address"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User.presentAddress}
               placeholder="Address"
             />
             <UiInput
               type="text"
+              disabled
               id="City"
               label={t("City")}
-              value={"City"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User?.city}
               placeholder="City"
             />
             <UiInput
               type="text"
+              disabled
               id="Country"
               label={t("Country")}
-              value={"Country"}
-              //   onChange={(e) => setName(e.target.value)}
+              value={User?.country}
               placeholder="Country"
             />
-            <div>
-              <label
-                htmlFor="dob"
-                className="text-sm font-medium text-gray-700 flex justify-start"
-              >
-                {t("dob")}
-              </label>
-              <Datepicker
-                useRange={false}
-                asSingle={true}
-                value={"22-10-2000"}
-                // placeholder={formatDate(user.dateOfBirth)}
-                primaryColor={"purple"}
-                popoverDirection="up"
-                toggleClassName="text-yellow absolute top-3 ltr:right-4 rtl:left-4"
-                inputClassName="Input_UI p-2 border border-gray-300 rounded-xl w-full"
-                // onChange={(e) => setDob(e)}
-              />
-            </div>
+            <UiInput
+              value={formatDate(User.dateOfBirth)}
+              type="text"
+              disabled
+              id="dob"
+              label={t("dob")}
+              placeholder="dob"
+            />
           </div>
         </div>
       </div>
@@ -208,19 +207,18 @@ const UserDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {Array(5)
-                .fill(0)
-                .map((_, idx) => (
+              {activeProjects?.length > 0 ? (
+                activeProjects.map((project, idx) => (
                   <tr key={idx} className="hover:bg-gray-100">
                     <td className="p-1 md:p-2 text-xs md:text-base">
-                      Project Name {idx + 1}
+                      {project.name} {idx + 1}
                     </td>
                     <td className="p-1 md:p-2">
                       134 <span className="hidden md:block">{t("Task")}</span>
                     </td>
                     <td className="p-1 md:p-2 flex items-center gap-1">
                       <span className="font-inter  text-xs text-gray-dark ">
-                        15%
+                        {project.percentage}%
                       </span>
                       <Progress
                         value={70}
@@ -241,72 +239,28 @@ const UserDetails = () => {
                     </td>
                     <td className="p-1 md:p-2">
                       <div className="flex -space-x-2">
-                        {Array(3)
-                          .fill(0)
-                          .map((_, i) => (
-                            <img
-                              key={i}
-                              src={`https://i.pravatar.cc/40?img=${i}`}
-                              alt="member"
-                              className="w-5 h-5 md:w-8 md:h-8 rounded-full border-2 border-white"
-                            />
-                          ))}
+                        {project?.members?.map((member, idx) => (
+                          <ProfileAvatar
+                            profilePic={member.profilePic}
+                            name={member.name}
+                            key={idx}
+                          />
+                        ))}
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td className="p-4 text-center" colSpan={4}>
+                    {t("NoActiveProjects")}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-        <div className="bg-white p-4 shadow-lg rounded-lg col-span-2">
-          <h3 className="font-semibold mb-2">{t("ProjectsPerformance")}</h3>
-          <div className="flex flex-col">
-            <Chart
-              options={chart}
-              series={chart.series}
-              type="radialBar"
-              height={180}
-            />
-            <div className="flex items-center justify-center gap-5 mt-2">
-              <div className="Completed flex flex-col items-center">
-                <span>
-                  <IoMdCheckmarkCircleOutline
-                    className="w-5 h-5"
-                    style={{
-                      color: "#81D4C2",
-                    }}
-                  />
-                </span>
-                <span className="font-semibold text-lg">44%</span>
-                <span className="font-medium text-base">{t("Completed")}</span>
-              </div>
-              <div className="In-Progress flex flex-col items-center">
-                <span>
-                  <IoTrendingUpOutline
-                    className="w-5 h-5"
-                    style={{
-                      color: "#FFB926",
-                    }}
-                  />
-                </span>
-                <span className="font-semibold text-lg">55%</span>
-                <span className="font-medium text-base">{t("inProgress")}</span>
-              </div>
-              <div className="Delayed flex flex-col items-center">
-                <span>
-                  <IoTrendingDownOutline
-                    className="w-5 h-5"
-                    style={{
-                      color: "#FF5630",
-                    }}
-                  />
-                </span>
-                <span className="font-semibold text-lg">67%</span>
-                <span className="font-medium text-base">{t("delayed")}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PerformanceChart data={projectsPerformance} />
       </div>
       <div className="bg-white rounded-2xl shadow-md p-2">
         <div className="border border-solid  border-purple p-2 rounded-2xl">
@@ -392,7 +346,7 @@ const UserDetails = () => {
                   <img src={masterCard} alt="MasterCard" className="w-12" />
                   <div>
                     <p className="font-bold">
-                      Ahmed Hassan{" "}
+                      Ahmed Hassan
                       <span style={{ color: "#637381" }}>xxxx-1234</span>
                     </p>
                     <p className="text-sm text-gray-500">

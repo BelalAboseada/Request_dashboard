@@ -134,7 +134,7 @@ const Users = () => {
         </thead>
         <tbody>
           {loading ? (
-            Array(6)
+            Array(10)
               .fill()
               .map((_, idx) => (
                 <tr key={idx}>

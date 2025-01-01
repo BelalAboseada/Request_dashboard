@@ -5,6 +5,7 @@ import { FaFileLines } from "react-icons/fa6";
 import { MdMessage } from "react-icons/md";
 import { t } from "i18next";
 import { memo, useMemo } from "react";
+import ProfileAvatar from "../profilePic/profilePic";
 
 const getStatusDisplay = (status) => {
   switch (status) {
@@ -19,18 +20,18 @@ const getStatusDisplay = (status) => {
 
 const AvatarList = memo(({ avatars }) => {
   const displayedAvatars = useMemo(() => avatars.slice(0, 5), [avatars]);
+
   return (
     <div className="members flex -space-x-2">
       {displayedAvatars.map((avatar, index) => (
-        <img
+        <ProfileAvatar
           key={index}
-          src={avatar}
-          alt="avatar"
-          className="w-8 h-8 border-2 border-white rounded-full m-1"
+          profilePic={avatar.profilePic}
+          name={avatar.name}
         />
       ))}
       {avatars.length > 5 && (
-        <span className="w-8 h-8 text-black font-semibold rounded-full flex items-center justify-center m-1">
+        <span className="w-8 h-8 text-black font-semibold bg-gray-200 rounded-full flex items-center justify-center m-1">
           +{avatars.length - 5}
         </span>
       )}
@@ -47,6 +48,7 @@ const BoardViewProject = ({
   filesLength,
   sDate,
   eDate,
+  budget,
   onApprove,
   onCancel,
 }) => {
@@ -66,7 +68,7 @@ const BoardViewProject = ({
       </div>
       <div className="name flex justify-between items-center mx-2 my-3">
         <p className="font-inter font-medium text-xs leading-5">{NameOfTask}</p>
-      
+        <span className="font-bold text-base">{budget}</span>
       </div>
       <div className="progress w-full mx-2 my-3">
         <div className="mb-2 flex items-center justify-between gap-4">

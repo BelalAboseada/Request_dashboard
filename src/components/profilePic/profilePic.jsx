@@ -49,3 +49,7 @@ const ProfileAvatar = ({ name, profilePic, className }) => {
 };
 
 export default ProfileAvatar;
+
+
+
+   
